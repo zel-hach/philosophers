@@ -17,8 +17,9 @@ void *function(void *t)
    t_info_philo *p;
 
     p = (t_info_philo *)t; 
+    pthread_mutex_lock(&p->fork[*p->id]);
+    pthread_mutex_lock(&p->fork[(*p->id % 5) + 1]);
     // sleep(1);
-    printf("test \n");
     pthread_exit(EXIT_SUCCESS);
 }
 
@@ -27,8 +28,10 @@ void    cree_thread(char **arg)
     t_info_philo    *p;
     int              i;
     int             *tab;
+    int               j;
     
     i = 0;
+    j=0;
     tab = malloc(sizeof(int) * 6);
     if (is_integer(arg) == 0)
 		     write(1,"Error\n",6);
@@ -40,11 +43,22 @@ void    cree_thread(char **arg)
             i++;
          }
         p = malloc(sizeof(t_info_philo));
+        p->fork = malloc(sizeof(pthread_mutex_t) * 4);
+        p->philo = malloc(sizeof(pthread_t) * 4);
+        pthread_mutex_init(p->fork,NULL);
         i = 0;
         while (i < tab[0])
         {
-            printf("test\n");
-           pthread_create(&p->philo[i], NULL, &function, &p);
+            p->id = malloc(sizeof(int));
+            p->id[j] = i;
+            pthread_create(&p->philo[i], NULL, &function, &p);
+            printf("hello : %d\n",p->id[j]);
+            i++;
+            j++;
+        }
+         i = 0;
+        while (i < tab[0])
+        {
             pthread_join(p->philo[i], NULL);
             i++;
         }

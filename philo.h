@@ -26,9 +26,9 @@ typedef struct v_philo
 
 typedef struct v_info_philo
 {
-    pthread_mutex_t fork;
-    pthread_t       philo[5]; 
-    int             id;
+    pthread_mutex_t *fork;
+    pthread_t       *philo; 
+    int             *id;
     long            last_meal;
 }                   t_info_philo;
 
