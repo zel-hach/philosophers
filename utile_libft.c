@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 14:16:45 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/09 15:01:28 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/12 15:59:05 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 	ptr[i] = 0;
 	return (ptr);
 }
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
