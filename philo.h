@@ -25,20 +25,12 @@ typedef struct v_philo
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				nbr_time_to_eat;
 	int				nmbr_eat;
+	long			t0;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 }					t_philo;
-
-typedef struct v_activites
-{
-	int fork1;
-	int	fork2;
-	int	eat;
-	int	sleep;
-	int	think;
-	int	die;
-}		t_activites;
 
 typedef struct v_info_philo
 {
@@ -47,7 +39,6 @@ typedef struct v_info_philo
 	int			count;
 	long		last_meal;
 	t_philo		*t;
-	t_activites	act;
 }				t_info_philo;
 
 
@@ -66,4 +57,5 @@ void			ft_print(t_info_philo *p, long time , int work);
 /******************* create philo *************/
 void			ft_philosophers(char **arg);
 long			get_time(void);
+void  ft_check_die(t_info_philo *p);
 #endif

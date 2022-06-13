@@ -27,18 +27,18 @@ long	get_time(void)
 void ft_print(t_info_philo *p, long time , int work)
 {
 	pthread_mutex_lock(&p->t->print);
-	if(work == p->act.fork1)
-		printf("time took fork1 is : %ld --- philo de id : %d \n",time, p->id);
-	else if(work == p->act.fork2)
-		printf("time took fork2 is : %ld --- philo de id : %d \n", time, p->id);
-	else if(work == p->act.eat)
-		printf("this time :%ld ---- philo de id : %d is eating\n",time, p->id);
-	else if(work == p->act.sleep)
-		printf("this time : %ld ---- philo de id : %d is sleeping\n", time, p->id);
-	else if (work == p->act.think)
-		printf("this time : %ld ---- philo de id : %d is thinking\n", time , p->id);
-	else if(work == p->act.die)
-		printf("this time : %ld ---- philo de id : %d is die \n", time , p->id);
+	if(work == 0)
+		printf("%ld --- philo id : %d take fork \n",time - p->t->t0, p->id);
+	else if(work == 1)
+		printf("%ld --- philo id : %d take fork\n", time - p->t->t0, p->id);
+	else if(work == 2)
+		printf("%ld --- philo id : %d is eating\n",time - p->t->t0, p->id);
+	else if(work == 3)
+		printf("%ld --- philo id : %d is sleeping\n", time - p->t->t0, p->id);
+	else if (work == 4)
+		printf("%ld --- philo id : %d is thinking\n", time - p->t->t0 , p->id);
+	else if(work == 5)
+		printf("%ld --- philo id : %d is die \n", time - p->t->t0 , p->id);
 	pthread_mutex_unlock(&p->t->print);
 }
 
