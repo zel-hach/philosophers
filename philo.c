@@ -23,20 +23,27 @@ long	get_time(void)
 	}
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
-
-void get_arg(int *tab, t_philo *t)
+void ft_print(t_info_philo *p, long time , int work)
 {
-	int i;
-	
-	i = 0;
-	while(tab[i])
-	{
-		t->number_of_philosophers = tab[0];
-		t->time_to_die = tab[1];
-		t->time_to_eat	= tab[2];
-		t->time_to_sleep = tab[3];
-		t->nmbr_eat	= tab[4];
-	}
+	pthread_mutex_lock(&p->t->print);
+	if(work == fork1)
+	printf("time took fork1 is : %ld --- philo de id : %d \n",get_time(), p->id);
+
+
+}
+void took_fork(t_info_philo *p)
+{
+			ft_print(p, get_time() , fork1);
+			pthread_mutex_lock(&p->t->fork[(p->id + 1) % p->t->number_of_philosophers]);
+			printf("time took fork1 is : %ld --- philo de id : %d \n", get_time(), p->id);
+}
+
+void put_fork(t_info_philo *p)
+{
+			pthread_mutex_unlock(&p->t->fork[p->id]);
+			printf("this time:%ld ---- philo de id : %d put fork1\n", get_time(), p->id);
+			pthread_mutex_unlock(&p->t->fork[(p->id + 1) % p->t->number_of_philosophers]);
+			printf("this time :%ld ---- philo de id : %d put fork2\n",get_time(), p->id);
 }
 
 void	*routine(void *t)
@@ -45,35 +52,31 @@ void	*routine(void *t)
 
 	p = (t_info_philo *)t;
 
-printf("%ld ------- %ld ---------%d\n ",get_time(),p->last_meal,p->t->time_to_die);
+	p->last_meal = get_time();
+	pthread_mutex_init(&p->t->print,NULL);
 	if (p->id % 2 == 0)
 		usleep (10000);
 	while (1)
 	{
 	
-		if(get_time() - p->last_meal >=  p->t->time_to_die)
+		if(get_time() - p->last_meal <=  p->t->time_to_die)
 		{
 			pthread_mutex_lock(&p->t->fork[p->id]);
-			printf("philo de id : %d took fork 1\n",p->id);
-			pthread_mutex_lock(&p->t->fork[(p->id + 1) % 4]);
-			printf("philo de id : %d took fork 2\n", p->id);
-			printf("philo de id : %d is eating\n", p->id);
-			p->last_meal = get_time();
-			usleep(60000);
-			pthread_mutex_unlock(&p->t->fork[p->id]);
-			printf("philo de id : %d put fork\n", p->id);
-			pthread_mutex_unlock(&p->t->fork[(p->id + 1) % 4]);
-			printf("philo de id : %d put fork\n", p->id);
-			usleep(60000);
-			printf("philo de id : %d is sleeping\n", p->id);
-			usleep(60000);
-			printf("philo de id : %d is thinking\n", p->id);
+			took_fork(p);
+			printf("this time :%ld ---- philo de id : %d is eating\n",get_time(), p->id);
+			usleep(p->t->time_to_eat * 1000);
+			put_fork(p);
+			printf("this time : %ld ---- philo de id : %d is sleeping\n", get_time(), p->id);
+			usleep(p->t->time_to_sleep * 1000);
+			printf("this time : %ld ---- philo de id : %d is thinking\n", get_time() , p->id);
 		}
-		// else
-		// {
-		// 	printf("philo is die \n");
-		// }
+		else
+		{
+			printf("philo is die \n");
+			break;
+		}
 	}
+	return(NULL);
 }
 
 void	create(int tab[0], t_philo *t, t_info_philo *p)
@@ -110,7 +113,6 @@ void	ft_philosophers(char **arg)
 			  write(1, "Error\n", 6);
 	else
 	{
-		printf("hello\n");
 		while (arg[i])
 		{
 			tab[i] = ft_atoi(arg[i]);
@@ -140,13 +142,13 @@ int	main(int argc, char **argv)
 	
 	arg = ft_join_args(argv);
 	argc = 0;
-	// if(argc <= 6)
-	// {
+	if(argc <= 6)
+	{
 		
 		if(check_space(argv) == 0)
 			write(1, "Error\n", 6);
 		else
 			ft_philosophers(arg);
-	// }
+	}
 	return(0);
 }

@@ -27,7 +27,18 @@ typedef struct v_philo
 	int				time_to_sleep;
 	int				nmbr_eat;
 	pthread_mutex_t	*fork;
+	pthread_mutex_t	print;
 }					t_philo;
+
+typedef struct v_activites
+{
+	int fork1;
+	int	fork2;
+	int	eat;
+	int	sleep;
+	int	think;
+	int	die;
+}		t_activites;
 
 typedef struct v_info_philo
 {
@@ -37,6 +48,7 @@ typedef struct v_info_philo
 	long		last_meal;
 	t_philo		*t;
 }				t_info_philo;
+
 
 /******************** libft function *****************/
 int				main(int argc, char **argv);
