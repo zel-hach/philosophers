@@ -47,6 +47,7 @@ typedef struct v_info_philo
 	int			count;
 	long		last_meal;
 	t_philo		*t;
+	t_activites	act;
 }				t_info_philo;
 
 
@@ -60,5 +61,9 @@ char			*ft_strtrim(char const *s1, char const *set);
 int				check_space(char **argv);
 size_t			ft_strlen(const char *str);
 int				is_integer(char **argv);
-
+/******************** print *******************/
+void			ft_print(t_info_philo *p, long time , int work);
+/******************* create philo *************/
+void			ft_philosophers(char **arg);
+long			get_time(void);
 #endif
