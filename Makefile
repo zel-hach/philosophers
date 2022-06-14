@@ -5,17 +5,17 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRC = philo.c  utile_libft.c split.c check_space.c check_is_int.c ft_create_thread.c utile_libft1.c utile_philo.c
+SRC = philo_mondatory/philo.c  philo_mondatory/utile_libft.c philo_mondatory/split.c philo_mondatory/check_space.c philo_mondatory/check_is_int.c philo_mondatory/ft_create_thread.c philo_mondatory/utile_libft1.c philo_mondatory/utile_philo.c
 
-SRC_BONUS = 
+SRC_BONUS = philo_bonus/utile_libft_bonus.c philo_bonus/split_bonus.c philo_bonus/check_space_bonus.c philo_bonus/check_is_int_bonus.c philo_bonus/utile_libft1_bonus.c
 
 OBJECTS = $(SRC:.c=.o)
 
 OBJECTS_BONUS = $(SRC_BONUS:.c=.o)
 
-INCLUDES = philo.h
+INCLUDES = philo_mondatory/philo.h
 
-INCLUDES_BONUS = philo_bonus.h
+INCLUDES_BONUS = philo_bonus/philo_bonus.h
 
 all: $(PHILO)
 
