@@ -5,7 +5,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRC = philo.c  utile_libft.c split.c check_space.c check_is_int.c ft_create_thread.c
+SRC = philo.c  utile_libft.c split.c check_space.c check_is_int.c ft_create_thread.c utile_libft1.c utile_philo.c
 
 SRC_BONUS = 
 

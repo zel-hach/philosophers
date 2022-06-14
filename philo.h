@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 10:49:52 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/12 15:46:32 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/14 12:10:39 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ typedef struct v_info_philo
 	long		last_meal;
 	t_philo		*t;
 }				t_info_philo;
-
-
-/******************** libft function *****************/
+/******************** libft function ********************************/
 int				main(int argc, char **argv);
 int				ft_isdigit(int c);
 long long int	ft_atoi(const char *str);
@@ -52,10 +50,18 @@ char			*ft_strtrim(char const *s1, char const *set);
 int				check_space(char **argv);
 size_t			ft_strlen(const char *str);
 int				is_integer(char **argv);
-/******************** print *******************/
-void			ft_print(t_info_philo *p, long time , int work);
-/******************* create philo *************/
+char			*ft_strjoin(char const *s1, char const *s2);
+/******************** print *****************************************/
+void			ft_print(t_info_philo *p, long time, int work);
+/******************* create philo ***********************************/
 void			ft_philosophers(char **arg);
 long			get_time(void);
-void  ft_check_die(t_info_philo *p);
+void			ft_check_die(t_info_philo *p);
+void			create(int tab[0], t_philo *t, t_info_philo *p);
+void			*routine(void *t);
+void			took_fork(t_info_philo *p);
+void			put_fork(t_info_philo *p);
+/******************* utile philo ***********************************/
+void			convert_to_integer(int *tab, char **arg);
+void			init_var(t_philo *t, int *tab);
 #endif
