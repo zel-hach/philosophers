@@ -7,7 +7,7 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRC = philo_mondatory/philo.c  philo_mondatory/utile_libft.c philo_mondatory/split.c philo_mondatory/check_space.c philo_mondatory/check_is_int.c philo_mondatory/ft_create_thread.c philo_mondatory/utile_libft1.c philo_mondatory/utile_philo.c
 
-SRC_BONUS = philo_bonus/utile_libft_bonus.c philo_bonus/split_bonus.c philo_bonus/check_space_bonus.c philo_bonus/check_is_int_bonus.c philo_bonus/utile_libft1_bonus.c
+SRC_BONUS = bonus/utile_libft_bonus.c bonus/split_bonus.c bonus/check_space_bonus.c bonus/check_is_int_bonus.c bonus/utile_libft1_bonus.c bonus/ft_create_thread_bonus.c bonus/utile_philo_bonus.c bonus/philo_bonus.c
 
 OBJECTS = $(SRC:.c=.o)
 
@@ -15,7 +15,7 @@ OBJECTS_BONUS = $(SRC_BONUS:.c=.o)
 
 INCLUDES = philo_mondatory/philo.h
 
-INCLUDES_BONUS = philo_bonus/philo_bonus.h
+INCLUDES_BONUS = bonus/philo_bonus.h
 
 all: $(PHILO)
 
