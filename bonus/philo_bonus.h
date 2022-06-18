@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:16:51 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/15 17:36:39 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/18 20:27:15 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <sys/time.h>
 # include <semaphore.h>
 # include <sys/fcntl.h>
+# include <sys/types.h>
+# include <signal.h>
 
 typedef struct v_philo
 {
@@ -30,13 +32,14 @@ typedef struct v_philo
 	int				nbr_time_to_eat;
 	int				nmbr_eat;
 	long			t0;
+	int				d;
 	sem_t			*fork;
-	sem_t			print;
+	sem_t			*print;
 }					t_philo;
 
 typedef struct v_info_philo
 {
-	pthread_t	philo;
+	pid_t		philo;
 	int			id;
 	int			count;
 	long		last_meal;
@@ -55,15 +58,16 @@ int				is_integer_bonus(char **argv);
 char			*ft_strjoin_bonus(char const *s1, char const *s2);
 int				ft_strlen_deux_dim_bonus(char **arg);
 /******************** print *****************************************/
-void			ft_print_bonus(t_info_philo *p, long time, int work);
+void	ft_print_bonus(t_info_philo *p, long time, int work , t_philo *t);
 /******************* create philo ***********************************/
 void			ft_philosophers_bonus(char **arg);
 long			get_time_bonus(void);
-void			ft_check_die_bonus(t_info_philo *p);
-void			create_bonus(int tab[0], t_philo *t, t_info_philo *p);
-void			*routine_bonus(void *t);
-void			took_fork_bonus(t_info_philo *p);
-void			put_fork_bonus(t_info_philo *p);
+void			*ft_check_die_bonus(void *t);
+void			create_bonus(t_info_philo *p, int t , t_philo *ph);
+void			routine_bonus(t_info_philo	*p, t_philo *t);
+void			took_fork_bonus(t_info_philo *p, t_philo *t);
+void			put_fork_bonus( t_philo *t);
+void			_exit_processing(t_info_philo *p);
 /******************* utile philo ***********************************/
 void			convert_to_integer_bonus(int *tab, char **arg);
 void			init_var_bonus(t_philo *t, int *tab);

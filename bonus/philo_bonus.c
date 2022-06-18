@@ -6,85 +6,88 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:58:49 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/15 17:54:11 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/18 20:41:23 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	*routine_bonus(void *t)
+void	routine_bonus(t_info_philo	*p, t_philo *t)
 {
-	t_info_philo	*p;
-
-	p = (t_info_philo *)t;
 	p->count = 0;
-	if (p->id % 2 == 0)
-		usleep (10000);
-	while (1)
+	printf("hello\n");
+	took_fork_bonus(p,t);
+	ft_print_bonus(p, get_time_bonus(), 2, t);
+	usleep(t->time_to_eat * 1000);
+	p->last_meal = get_time_bonus();
+	p->count++;
+	if (p->count == t->nmbr_eat)
+		t->nbr_time_to_eat++;
+	put_fork_bonus(t);
+	ft_print_bonus(p, get_time_bonus(), 3, t);
+	usleep(t->time_to_sleep * 1000);
+	ft_print_bonus(p, get_time_bonus(), 4, t);
+}
+void start_routine_bonus(t_info_philo *p, t_philo *t)
+{
+	pthread_t dead;
+	
+	if (pthread_create(&dead, NULL, &ft_check_die_bonus, p))
 	{
-		took_fork_bonus(p);
-		ft_print_bonus(p, get_time_bonus(), 2);
-		usleep(p->t->time_to_eat * 1000);
-		p->last_meal = get_time_bonus();
-		p->count++;
-		if (p->count == p->t->nmbr_eat)
-			p->t->nbr_time_to_eat++;
-		put_fork_bonus(p);
-		ft_print_bonus(p, get_time(), 3);
-		usleep(p->t->time_to_sleep * 1000);
-		ft_print_bonus(p, get_time(), 4);
+		printf("error");
+		exit(0);
 	}
-	return (NULL);
+	while(1)
+		routine_bonus(p, t);
 }
 
-void	create_bonus(int tab[0], t_philo *t, t_info_philo *p)
+void	create_bonus(t_info_philo *p, int t , t_philo *ph)
 {
-	int	i;
-
+	int			i;
+	
 	i = 0;
-	sem_init(&t->print, 0, 1);
-	while (i < tab[0])
+	p->count = 0;
+	while (i < t)
 	{
 		p[i].id = i;
-		p[i].t = t;
-		pthread_create(&p->philo, NULL, &routine_bonus, &p[i]);
-		p[i].last_meal = get_time();
+		p[i].philo = fork();
+		p[i].t = ph;
+		if (p[i].philo < 0)
+		{
+			write(2, "error!\n", 7);
+			exit(1);
+		}
+		else if (p[i].philo == 0)
+			start_routine_bonus(&p[i], ph);
+		usleep(100);
 		i++;
 	}
-	ft_check_die_bonus(p);
+	_exit_processing(p);
 }
 
 void	ft_philosophers_bonus(char **arg)
 {
 	t_info_philo	*p;
-	int				i;
 	int				*tab;
 	t_philo			*t;
-
-	tab = malloc(sizeof(int ) * ft_strlen_deux_dim(arg));
-	convert_to_integer(tab, arg);
+	
+	tab = malloc(sizeof(int ) * ft_strlen_deux_dim_bonus(arg));
+	convert_to_integer_bonus(tab, arg);
 	t = malloc(sizeof(t_philo) * tab[0]);
 	init_var_bonus(t, tab);
-	p = malloc(sizeof(t_info_philo) * t->number_of_philosophers);
-	t->fork = malloc(sizeof(sem_t) * t->number_of_philosophers);
-	sem_open(t->fork, O_CREAT, 0664,t->number_of_philosophers);
-	sem_open(t->print, O_CREAT, 0664, 1);
-	i = 0;
-	while (i < t->number_of_philosophers)
-        sem_init(&t->fork[i++], 0, 1);
+	p = (t_info_philo *)malloc(sizeof(t_info_philo) * t->number_of_philosophers);
+	sem_unlink("fork");
+	sem_unlink("print");
+	t->fork = sem_open("fork", O_CREAT, 0664,t->number_of_philosophers);
+	t->print = sem_open("print", O_CREAT, 0664, 1);
 	t->t0 = get_time_bonus();
-	create_bonus(&t->number_of_philosophers, t, p);
-	i = 0;
-	while (i < t->number_of_philosophers)
-		sem_destroy(&t->fork[i++]);
+	create_bonus(p, t->number_of_philosophers, t);
 }
 
 
 int	main(int argc, char **argv)
 {
 	char	**arg;
-	pid_t pid;
-    pid = fork();
 
 	arg = ft_join_args_bonus(argv);
 	argc = 0;
