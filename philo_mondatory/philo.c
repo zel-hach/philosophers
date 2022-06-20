@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 10:49:49 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/20 14:11:36 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:17:46 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*routine(void *t)
 	p = (t_info_philo *)t;
 	p->count = 0;
 	if (p->id % 2 == 0)
-		usleep (18000);
+		usleep (10000);
 	while (1)
 	{
 		took_fork(p);

@@ -8,13 +8,12 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 
 define HEADER
 
- _______  __   __  ___   ___      _______  _______  _______  _______  __   __  _______  ______    _______ 
-|       ||  | |  ||   | |   |    |       ||       ||       ||       ||  | |  ||       ||    _ |  |       |
-|    _  ||  |_|  ||   | |   |    |   _   ||  _____||   _   ||    _  ||  |_|  ||    ___||   | ||  |  _____|
-|   |_| ||       ||   | |   |    |  | |  || |_____ |  | |  ||   |_| ||       ||   |___ |   |_||_ | |_____ 
-|    ___||       ||   | |   |___ |  |_|  ||_____  ||  |_|  ||    ___||       ||    ___||    __  ||_____  |
-|   |    |   _   ||   | |       ||       | _____| ||       ||   |    |   _   ||   |___ |   |  | | _____| |
-|___|    |__| |__||___| |_______||_______||_______||_______||___|    |__| |__||_______||___|  |_||_______|
+██████╗ ██╗  ██╗██╗██╗      ██████╗ ███████╗ ██████╗ ██████╗ ██╗  ██╗███████╗██████╗ ███████╗
+██╔══██╗██║  ██║██║██║     ██╔═══██╗██╔════╝██╔═══██╗██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝
+██████╔╝███████║██║██║     ██║   ██║███████╗██║   ██║██████╔╝███████║█████╗  ██████╔╝███████╗
+██╔═══╝ ██╔══██║██║██║     ██║   ██║╚════██║██║   ██║██╔═══╝ ██╔══██║██╔══╝  ██╔══██╗╚════██║
+██║     ██║  ██║██║███████╗╚██████╔╝███████║╚██████╔╝██║     ██║  ██║███████╗██║  ██║███████║
+╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
 
 endef
 export HEADER
@@ -31,26 +30,34 @@ INCLUDES = philo_mondatory/philo.h
 
 INCLUDES_BONUS = bonus/philo_bonus.h
 
+.PHONY : all print_header clean fclean re
+
 all: $(PHILO)
 
 bonus:$(PHILO_BONUS)
 
 $(PHILO): print_header $(OBJECTS)
-		$(CC) $(CFLAGS) $(OBJECTS) -o $(PHILO)
+		@$(CC) $(CFLAGS) $(OBJECTS) -o $(PHILO)
+		@echo "\033[1;32m $(PHILO) created 👍 \033[1;32m"
 
 $(PHILO_BONUS): print_header $(OBJECTS_BONUS)
-		$(CC) $(CFLAGS) $(OBJECTS_BONUS) -o $(PHILO_BONUS)
+		@$(CC) $(CFLAGS) $(OBJECTS_BONUS) -o $(PHILO_BONUS)
+		@echo "\033[1;32m $(PHILO_BONUS) created 👍 \033[1;32m"
 
 print_header:
 	@echo "\033[0;35m $$HEADER \033[0;35m"
 
 %.o : %.c $(INCLUDES) $(INCLUDES_BONUS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "\033[0;33m $@  created ✅ \033[0;35m"
 
-clean:
-	rm -rf $(OBJECTS) $(OBJECTS_BONUS)
+clean: print_header
+	@echo "\033[1;33m $(OBJECTS) \033[1;31m :is deleted 👍 \033[1;31m"
+	@echo "\033[1;33m $(OBJECTS_BONUS) \033[1;31m :is deleted 👍 \033[1;31m"
+	@echo "\033[1;33m $(PHILO_BONUS) \033[1;31m :is deleted 👍 \033[1;31m" 
+	@echo "\033[1;33m $(PHILO)       \033[1;31m :is deleted 👍 \033[1;31m"
+	@rm -rf $(OBJECTS) $(OBJECTS_BONUS)
 
 fclean : clean
-	rm -rf $(PHILO) $(PHILO_BONUS)
-
+	@rm -rf $(PHILO) $(PHILO_BONUS)
 re: fclean all
