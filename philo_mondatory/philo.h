@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 10:49:52 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/14 16:06:19 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:10:03 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <limits.h>
 
 typedef struct v_philo
 {
@@ -55,7 +56,7 @@ int				ft_strlen_deux_dim(char **arg);
 /******************** print *****************************************/
 void			ft_print(t_info_philo *p, long time, int work);
 /******************* create philo ***********************************/
-void			ft_philosophers(char **arg);
+void			ft_philosophers(char **arg, int argc);
 long			get_time(void);
 void			ft_check_die(t_info_philo *p);
 void			create(int tab[0], t_philo *t, t_info_philo *p);
@@ -63,6 +64,7 @@ void			*routine(void *t);
 void			took_fork(t_info_philo *p);
 void			put_fork(t_info_philo *p);
 /******************* utile philo ***********************************/
-void			convert_to_integer(int *tab, char **arg);
-void			init_var(t_philo *t, int *tab);
+int				convert_to_integer(long long int *tab, char **arg);
+void			init_var(t_philo *t, long long int *tab, int argc);
+void			ft_free(t_info_philo *p, t_philo *t, long long int *tab);
 #endif

@@ -6,11 +6,19 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:11:05 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/14 12:11:24 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:10:32 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	ft_free(t_info_philo *p, t_philo *t, long long int *tab)
+{
+	free(t->fork);
+	free(t);
+	free(p);
+	free(tab);
+}
 
 int	ft_isdigit(int c)
 {

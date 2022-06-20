@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:16:51 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/18 20:27:15 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:07:59 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/fcntl.h>
 # include <sys/types.h>
 # include <signal.h>
+# include <limits.h>
 
 typedef struct v_philo
 {
@@ -43,6 +44,7 @@ typedef struct v_info_philo
 	int			id;
 	int			count;
 	long		last_meal;
+	pthread_t	dead;
 	t_philo		*t;
 }				t_info_philo;
 /******************** libft function ********************************/
@@ -58,18 +60,20 @@ int				is_integer_bonus(char **argv);
 char			*ft_strjoin_bonus(char const *s1, char const *s2);
 int				ft_strlen_deux_dim_bonus(char **arg);
 /******************** print *****************************************/
-void	ft_print_bonus(t_info_philo *p, long time, int work , t_philo *t);
+void			ft_print_bonus(t_info_philo *p, long time,
+					int work, t_philo *t);
 /******************* create philo ***********************************/
-void			ft_philosophers_bonus(char **arg);
+void			ft_philosophers_bonus(char **arg, int argc);
 long			get_time_bonus(void);
 void			*ft_check_die_bonus(void *t);
-void			create_bonus(t_info_philo *p, int t , t_philo *ph);
+void			create_bonus(t_info_philo *p, int t, t_philo *ph);
 void			routine_bonus(t_info_philo	*p, t_philo *t);
 void			took_fork_bonus(t_info_philo *p, t_philo *t);
 void			put_fork_bonus( t_philo *t);
-void			_exit_processing(t_info_philo *p);
+void			_exit_processing(t_info_philo *p, t_philo *t);
 /******************* utile philo ***********************************/
-void			convert_to_integer_bonus(int *tab, char **arg);
-void			init_var_bonus(t_philo *t, int *tab);
+int				convert_to_integer_bonus(long long int *tab, char **arg);
+void			init_var_bonus(t_philo *t, long long int *tab, int argc);
+void			ft_free(t_info_philo *p, t_philo *t);
 
 #endif

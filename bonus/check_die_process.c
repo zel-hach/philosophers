@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/18 12:06:56 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/18 20:28:16 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/19 17:36:08 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,44 +14,51 @@
 
 void	*ft_check_die_bonus(void *t)
 {
-	int	i;
-	t_info_philo *p;
+	int				i;
+	t_info_philo	*p;
+
 	p = (t_info_philo *)t;
 	i = 0;
 	while (1)
 	{
-		if (get_time_bonus() - p->last_meal > p->t->time_to_die
-			|| p->t->nbr_time_to_eat == p->t->number_of_philosophers)
+		if (get_time_bonus() - p->last_meal > p->t->time_to_die)
 		{
-			ft_print_bonus(p, get_time_bonus(), 5,p->t);
+			sem_wait(p->t->print);
+			printf("%ld --- philo id : %d is die \n",
+				get_time_bonus() - p->t->t0, p->id);
 			p->t->d = 1;
-            exit(1);
+			exit (1);
 		}
-		usleep(100);
+		if (p->t->nmbr_eat == p->t->nbr_time_to_eat)
+		{
+			p->t->d = 1;
+			exit (0);
+		}
+		usleep (100);
 	}
-
+	return (0);
 }
 
-void _exit_processing(t_info_philo *p)
+void	_exit_processing(t_info_philo *p, t_philo *t)
 {
-    int status;
+	int	status;
 	int	i;
-    
-	i = -1;
-	while(1)
+
+	while (1)
 	{
-    	waitpid(-1, &status, 0);
-    	if(status != 0 && p->count == p->t->number_of_philosophers)
+		waitpid(-1, &status, 0);
+		if (WEXITSTATUS(status) != 0 || p->count == t->number_of_philosophers)
 		{
-			while(++i < (p->t->number_of_philosophers - 1))
-				kill(p[i].philo,SIGTERM);
-			break;
+			i = -1;
+			while (++i < t->number_of_philosophers)
+				kill(p[i].philo, SIGTERM);
+			break ;
 		}
-		if(status == 0 && p->t->nmbr_eat == -1)
+		else if (WEXITSTATUS(status) == 0)
 			p->count++;
 	}
-	sem_close(p->t->fork);
-	sem_close(p->t->print);
+	sem_close(t->fork);
+	sem_close(t->print);
 	sem_unlink("fork");
 	sem_unlink("print");
 }

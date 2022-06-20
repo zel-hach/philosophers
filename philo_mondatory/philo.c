@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 10:49:49 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/14 20:00:22 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:11:36 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*routine(void *t)
 	p = (t_info_philo *)t;
 	p->count = 0;
 	if (p->id % 2 == 0)
-		usleep (10000);
+		usleep (18000);
 	while (1)
 	{
 		took_fork(p);
@@ -51,30 +51,36 @@ void	create(int tab[0], t_philo *t, t_info_philo *p)
 		p[i].last_meal = get_time();
 		i++;
 	}
+	pthread_detach(p->philo);
 	ft_check_die(p);
 }
 
-void	ft_philosophers(char **arg)
+void	ft_philosophers(char **arg, int argc)
 {
 	t_info_philo	*p;
 	int				i;
-	int				*tab;
+	long long int	*tab;
 	t_philo			*t;
 
-	tab = malloc(sizeof(int ) * ft_strlen_deux_dim(arg));
-	convert_to_integer(tab, arg);
-	t = malloc(sizeof(t_philo) * tab[0]);
-	init_var(t, tab);
-	p = malloc(sizeof(t_info_philo) * t->number_of_philosophers);
-	t->fork = malloc(sizeof(pthread_mutex_t) * t->number_of_philosophers);
-	i = 0;
-	while (i < t->number_of_philosophers)
-		pthread_mutex_init(&t->fork[i++], NULL);
-	t->t0 = get_time();
-	create(&t->number_of_philosophers, t, p);
-	i = 0;
-	while (i < t->number_of_philosophers)
-		pthread_mutex_destroy(&t->fork[i++]);
+	tab = malloc(sizeof(long long int) * ft_strlen_deux_dim(arg));
+	if (convert_to_integer(tab, arg) == 0)
+		printf("erreur max_int or min_int");
+	else
+	{
+		t = malloc(sizeof(t_philo) * tab[0]);
+		init_var(t, tab, argc);
+		p = malloc(sizeof(t_info_philo) * t->number_of_philosophers);
+		t->fork = malloc(sizeof(pthread_mutex_t) * t->number_of_philosophers);
+		i = 0;
+		while (i < t->number_of_philosophers)
+			pthread_mutex_init(&t->fork[i++], NULL);
+		t->t0 = get_time();
+		create(&t->number_of_philosophers, t, p);
+		i = 0;
+		while (i < t->number_of_philosophers)
+			pthread_mutex_destroy(&t->fork[i++]);
+		ft_free(p, t, tab);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -82,8 +88,12 @@ int	main(int argc, char **argv)
 	char	**arg;
 
 	arg = ft_join_args(argv);
-	argc = 0;
-	if (argc <= 6)
+	if (argc > 6 || argc < 5)
+	{
+		printf("le nombre d'arguments incorrect\n");
+		return (0);
+	}
+	else
 	{
 		if (check_space(argv) == 0)
 			write(1, "Error\n", 6);
@@ -92,7 +102,7 @@ int	main(int argc, char **argv)
 			if (is_integer(arg) == 0)
 				write(1, "Error\n", 6);
 			else
-				ft_philosophers(arg);
+				ft_philosophers(arg, argc);
 		}
 	}
 	return (0);

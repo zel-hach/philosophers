@@ -6,7 +6,7 @@
 /*   By: zel-hach <zel-hach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:58:49 by zel-hach          #+#    #+#             */
-/*   Updated: 2022/06/18 20:41:23 by zel-hach         ###   ########.fr       */
+/*   Updated: 2022/06/20 13:54:23 by zel-hach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,84 +14,88 @@
 
 void	routine_bonus(t_info_philo	*p, t_philo *t)
 {
-	p->count = 0;
-	printf("hello\n");
-	took_fork_bonus(p,t);
+	took_fork_bonus(p, t);
 	ft_print_bonus(p, get_time_bonus(), 2, t);
-	usleep(t->time_to_eat * 1000);
 	p->last_meal = get_time_bonus();
-	p->count++;
-	if (p->count == t->nmbr_eat)
-		t->nbr_time_to_eat++;
+	usleep(t->time_to_eat * 1000);
+	t->nbr_time_to_eat++;
 	put_fork_bonus(t);
 	ft_print_bonus(p, get_time_bonus(), 3, t);
 	usleep(t->time_to_sleep * 1000);
 	ft_print_bonus(p, get_time_bonus(), 4, t);
 }
-void start_routine_bonus(t_info_philo *p, t_philo *t)
+
+void	start_routine_bonus(t_info_philo *p, t_philo *t)
 {
-	pthread_t dead;
-	
-	if (pthread_create(&dead, NULL, &ft_check_die_bonus, p))
+	if (pthread_create(&p->dead, NULL, &ft_check_die_bonus, p))
 	{
-		printf("error");
-		exit(0);
+		write(2, "error in create threads\n", 25);
+		exit(1);
 	}
-	while(1)
+	pthread_detach(p->dead);
+	while (t->d == 0)
 		routine_bonus(p, t);
 }
 
-void	create_bonus(t_info_philo *p, int t , t_philo *ph)
+void	create_bonus(t_info_philo *p, int t, t_philo *ph)
 {
-	int			i;
-	
+	int	i;
+
 	i = 0;
 	p->count = 0;
 	while (i < t)
 	{
-		p[i].id = i;
 		p[i].philo = fork();
-		p[i].t = ph;
 		if (p[i].philo < 0)
 		{
 			write(2, "error!\n", 7);
 			exit(1);
 		}
 		else if (p[i].philo == 0)
+		{
+			p[i].id = i;
+			p[i].t = ph;
+			p[i].last_meal = get_time_bonus();
 			start_routine_bonus(&p[i], ph);
-		usleep(100);
+		}
 		i++;
 	}
-	_exit_processing(p);
+	_exit_processing(p, ph);
 }
 
-void	ft_philosophers_bonus(char **arg)
+void	ft_philosophers_bonus(char **arg, int argc)
 {
 	t_info_philo	*p;
-	int				*tab;
+	long long int	*tab;
 	t_philo			*t;
-	
-	tab = malloc(sizeof(int ) * ft_strlen_deux_dim_bonus(arg));
-	convert_to_integer_bonus(tab, arg);
-	t = malloc(sizeof(t_philo) * tab[0]);
-	init_var_bonus(t, tab);
-	p = (t_info_philo *)malloc(sizeof(t_info_philo) * t->number_of_philosophers);
-	sem_unlink("fork");
-	sem_unlink("print");
-	t->fork = sem_open("fork", O_CREAT, 0664,t->number_of_philosophers);
-	t->print = sem_open("print", O_CREAT, 0664, 1);
-	t->t0 = get_time_bonus();
-	create_bonus(p, t->number_of_philosophers, t);
-}
 
+	tab = malloc(sizeof(long long int ) * ft_strlen_deux_dim_bonus(arg));
+	if (convert_to_integer_bonus(tab, arg) == 0)
+		printf("error for max_int or min_int\n");
+	else
+	{
+		t = malloc(sizeof(t_philo) * tab[0]);
+		init_var_bonus(t, tab, argc);
+		p = (t_info_philo *)malloc(sizeof(t_info_philo)
+				* t->number_of_philosophers);
+		sem_unlink("fork");
+		sem_unlink("print");
+		t->fork = sem_open("fork", O_CREAT, 0664, t->number_of_philosophers);
+		t->print = sem_open("print", O_CREAT, 0664, 1);
+		t->t0 = get_time_bonus();
+		t->d = 0;
+		create_bonus(p, t->number_of_philosophers, t);
+		ft_free(p, t);
+	}
+	free(tab);
+}
 
 int	main(int argc, char **argv)
 {
 	char	**arg;
 
 	arg = ft_join_args_bonus(argv);
-	argc = 0;
-	if (argc <= 6)
+	if (argc == 6 || argc == 5)
 	{
 		if (check_space_bonus(argv) == 0)
 			write(1, "Error\n", 6);
@@ -100,7 +104,7 @@ int	main(int argc, char **argv)
 			if (is_integer_bonus(arg) == 0)
 				write(1, "Error\n", 6);
 			else
-				ft_philosophers_bonus(arg);
+				ft_philosophers_bonus(arg, argc);
 		}
 	}
 	return (0);

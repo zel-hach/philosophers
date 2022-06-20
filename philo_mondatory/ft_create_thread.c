@@ -52,8 +52,6 @@ void	ft_print(t_info_philo *p, long time, int work)
 		printf("%ld --- philo id : %d is sleeping\n", time - p->t->t0, p->id);
 	else if (work == 4)
 		printf("%ld --- philo id : %d is thinking\n", time - p->t->t0, p->id);
-	else if (work == 5)
-		printf("%ld --- philo id : %d is die \n", time - p->t->t0, p->id);
 	pthread_mutex_unlock(&p->t->print);
 }
 
@@ -67,7 +65,9 @@ void	ft_check_die(t_info_philo *p)
 		if (get_time() - p->last_meal > p->t->time_to_die
 			|| p->t->nbr_time_to_eat == p->t->number_of_philosophers)
 		{
-			ft_print(p, get_time(), 5);
+			pthread_mutex_lock(&p->t->print);
+			printf("%ld --- philo id : %d is die \n",
+				get_time() - p->t->t0, p->id);
 			break ;
 		}
 		usleep(100);
